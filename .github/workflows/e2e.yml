@@ -1,0 +1,62 @@
+name: ReleaseGuard E2E Critical-Flow Regression
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  regression-gate:
+    name: Playwright Critical-Flow Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout ReleaseGuard Mini
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Checkout Target Application (Pinned Reference)
+        uses: actions/checkout@v4
+        with:
+          repository: 'cypress-io/cypress-realworld-app'
+          ref: '79aa5b126fdd951aab2263c8201b52aeb5f2a43c'
+          path: 'target-app'
+
+      - name: Install Target App Dependencies & Seed Database
+        working-directory: ./target-app
+        run: |
+          corepack enable
+          corepack yarn install --frozen-lockfile
+
+      - name: Start Target App Services (Frontend + Backend)
+        working-directory: ./target-app
+        run: |
+          corepack yarn start &
+          npx wait-on -t 60000 http://localhost:3000 http://localhost:3001/testData/seed
+
+      - name: Install ReleaseGuard Dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium & System Dependencies
+        run: npx playwright install chromium --with-deps
+
+      - name: Execute Critical-Flow Regression Gate
+        run: npx playwright test
+
+      - name: Upload Playwright Test Report & Failure Traces
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

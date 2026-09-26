@@ -1,0 +1,30 @@
+{
+  "name": "releaseguard-mini",
+  "version": "1.0.0",
+  "description": "Pre-launch QA + Playwright critical-flow regression suite for SaaS teams",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "test:run1": "playwright test",
+    "test:run2": "playwright test",
+    "test:run3": "playwright test"
+  },
+  "keywords": [
+    "playwright",
+    "qa",
+    "testing",
+    "saas",
+    "regression",
+    "freelance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  }
+}

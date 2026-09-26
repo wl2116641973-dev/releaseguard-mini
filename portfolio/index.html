@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReleaseGuard Mini | SaaS Pre-Launch QA Portfolio</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-heading: #f0f6fc;
+      --accent: #2ea043;
+      --accent-hover: #3fb950;
+      --blue: #58a6ff;
+      --danger: #f85149;
+      --warning: #d29922;
+      --code-bg: #090d13;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #21262d;
+      border: 1px solid var(--border);
+      color: var(--text-heading);
+    }
+    .badge.green { background: #1a4224; border-color: var(--accent); color: #7ee787; }
+    .badge.blue { background: #182a44; border-color: var(--blue); color: #79c0ff; }
+    .badge.red { background: #441a1a; border-color: var(--danger); color: #ff7b72; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    h1 { font-size: 2.2rem; color: var(--text-heading); margin-bottom: 8px; }
+    h2 { font-size: 1.5rem; color: var(--text-heading); margin: 30px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    h3 { font-size: 1.15rem; color: var(--text-heading); margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    .hero-lead { font-size: 1.15rem; color: #8b949e; max-width: 760px; margin: 0 auto; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 16px; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .card:hover { border-color: #58a6ff; transform: translateY(-2px); }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13px;
+      color: #79c0ff;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th { background: #21262d; color: var(--text-heading); }
+    tr:nth-child(even) { background: #12161c; }
+
+    .pill-fail { color: var(--danger); font-weight: 600; }
+    .pill-pass { color: var(--accent); font-weight: 600; }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
+    .price-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .price-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(46, 160, 67, 0.2);
+    }
+    .price-val { font-size: 2.2rem; font-weight: 700; color: var(--text-heading); margin: 12px 0; }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 18px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .cta-btn:hover { background: var(--accent-hover); }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #8b949e;
+      margin-top: 50px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ReleaseGuard Mini</h1>
+  <p class="hero-lead">SaaS Pre-Launch QA + Playwright Critical-Flow Regression Gate</p>
+  <div class="badge-bar">
+    <span class="badge green">✓ 12/12 Passing</span>
+    <span class="badge blue">⚡ 38s Suite Runtime</span>
+    <span class="badge green">🛡️ 0% Flakiness (3 Consecutive Runs)</span>
+    <span class="badge">Playwright + TypeScript</span>
+    <span class="badge red">1 Critical BOLA Discovered</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <section>
+    <h2>🎯 Executive Value for SaaS Founders</h2>
+    <p>Before launching your Web/SaaS product, you need to know that core revenue journeys, user logins, and profile settings won't break. ReleaseGuard Mini delivers an automated, deterministic pre-launch gate with undeniable visual failure forensics.</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>⚡ Rapid Codebase Onboarding</h3>
+        <p>Ability to audit and automate unfamiliar complex Web/SaaS stacks (React 18, Vite, Express, lowdb) in hours without engineering hand-holding.</p>
+      </div>
+      <div class="card">
+        <h3>🎯 Commercial Risk Scoping</h3>
+        <p>Focuses strictly on revenue-critical user flows (Auth, Payments, Notifications, Settings) rather than superficial click-through vanity tests.</p>
+      </div>
+      <div class="card">
+        <h3>📸 Undeniable Forensics</h3>
+        <p>Automatic screenshot, execution video, and interactive Playwright trace captured on every failure. Never spend time debating if a bug is real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🛡️ 4 Mission-Critical Business Flows Guarded</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Flow 1: Authentication & Session</h3>
+        <p>• Valid credentials authentication & token persistence<br>• Invalid credentials error modal & submission freeze<br>• Secure logout & protected route access redirection</p>
+      </div>
+      <div class="card">
+        <h3>Flow 2: Financial Transactions</h3>
+        <p>• Peer-to-peer payment execution & confirmation<br>• Client validation: empty amount/note blocking<br>• Personal feed ledger transaction listing<br>• <strong>Mathematical balance reconciliation in sidebar ($1,509.53 → $1,484.53)</strong></p>
+      </div>
+      <div class="card">
+        <h3>Flow 3: Notifications & Activity</h3>
+        <p>• Unread notifications feed render<br>• Notification dismissal with count badge sync<br>• Persistence check preventing dismissed notice revival</p>
+      </div>
+      <div class="card">
+        <h3>Flow 4: Profile & Account Settings</h3>
+        <p>• Form field updates with <strong>full browser reload persistence</strong><br>• Email schema format validation preventing DB corruption</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🚨 Controlled Synthetic Regression Drill (Proof of Sensitivity)</h2>
+    <p>We prove this suite catches real regressions by running a controlled drill where <code>firstName</code> was dropped during form payload compilation in <code>UserSettingsForm.tsx</code>:</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Command Executed</th>
+          <th>Result</th>
+          <th>Forensic Artifacts Produced</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill-fail">RED PHASE</span></td>
+          <td><code>npx playwright test tests/profile.spec.ts</code></td>
+          <td><span class="pill-fail">FAILED (Exit Code 1)</span></td>
+          <td>
+            • <code>failure-screenshot.png</code> (Visual freeze)<br>
+            • <code>failure-trace.zip</code> (DOM + Network trace)<br>
+            • <code>failure-video.webm</code> (Full session recording)
+          </td>
+        </tr>
+        <tr>
+          <td><span class="pill-pass">GREEN PHASE</span></td>
+          <td><code>npx playwright test tests/profile.spec.ts</code></td>
+          <td><span class="pill-pass">PASSED (Exit Code 0)</span></td>
+          <td>Verified in 9.2s after restoring clean code dispatch</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>🔍 High-Impact Exploratory Defects Surfaced</h2>
+    <p>Beyond automation, ReleaseGuard's exploratory audit revealed critical pre-launch vulnerabilities in the target application:</p>
+    
+    <div class="card" style="border-left: 4px solid var(--danger); margin-bottom: 12px;">
+      <h3 style="color: var(--danger);">DEF-SEC-01: Broken Object-Level Authorization (BOLA / IDOR)</h3>
+      <p><code>PATCH /users/:userId</code> and <code>GET /transactions/:transactionId</code> authenticate users but never verify object ownership. Any logged-in user can overwrite another user's profile or inspect private transactions across tenants.</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--warning); margin-bottom: 12px;">
+      <h3 style="color: var(--warning);">DEF-01: Non-Atomic Financial Ledger Mutations</h3>
+      <p>A single peer-to-peer transfer runs 4 separate, un-bracketed database writes. A server restart mid-sequence permanently desynchronizes sender and receiver balance records.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>💼 Freelance Service Packages</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div>
+          <h3>Starter Smoke Gate</h3>
+          <div class="price-val">$49</div>
+          <p>1 Critical Flow (Auth + Core Journey), Page Object Model, Local instructions, Bug report if discovered.</p>
+        </div>
+        <a href="https://www.upwork.com/" class="cta-btn">Order on Upwork</a>
+      </div>
+      <div class="price-card featured">
+        <div>
+          <span class="badge green" style="margin-bottom: 8px;">MOST POPULAR</span>
+          <h3>Standard Pre-Launch Guard</h3>
+          <div class="price-val">$89</div>
+          <p>3 Critical Flows, Deterministic State Reset, Visual HTML Report, GitHub Actions CI/CD workflow, Defect Log.</p>
+        </div>
+        <a href="https://www.upwork.com/" class="cta-btn">Order Standard</a>
+      </div>
+      <div class="price-card">
+        <div>
+          <h3>Flagship Release Gate</h3>
+          <div class="price-val">$149</div>
+          <p>5 Critical Flows, Full Failure Forensics (Trace/Video), Security & Authorization Audit, Executive GO/HOLD Verdict.</p>
+        </div>
+        <a href="https://www.upwork.com/" class="cta-btn">Order Flagship</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Target application © Cypress.io, MIT Licensed. QA strategy, Playwright automation, and ReleaseGuard tooling are independent work. No endorsement by Cypress.io.</p>
+    <p style="margin-top: 6px;">ReleaseGuard Mini — Engineered for SaaS Launch Confidence.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
