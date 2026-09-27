@@ -28,7 +28,11 @@ export class ProfilePage {
     await this.emailInput.fill(email);
     await this.phoneInput.fill(phone);
     await expect(this.submitButton).toBeEnabled();
+    const updateResponse = this.page.waitForResponse(
+      (resp) => resp.url().includes('/users/') && resp.request().method() === 'PATCH' && (resp.status() === 204 || resp.status() === 200)
+    );
     await this.submitButton.click();
+    await updateResponse;
   }
 
   async expectFieldValues(firstName: string, lastName: string, email: string, phone: string): Promise<void> {
