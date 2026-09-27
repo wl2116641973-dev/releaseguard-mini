@@ -17,10 +17,10 @@ jobs:
       - name: Checkout ReleaseGuard Mini
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 24
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: 'npm'
 
       - name: Checkout Target Application (Pinned Reference)
@@ -30,17 +30,15 @@ jobs:
           ref: '79aa5b126fdd951aab2263c8201b52aeb5f2a43c'
           path: 'target-app'
 
-      - name: Install Target App Dependencies & Seed Database
+      - name: Install Target App Dependencies & Setup Mocks
         working-directory: ./target-app
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: |
           corepack enable
           corepack yarn install --frozen-lockfile
-
-      - name: Start Target App Services (Frontend + Backend)
-        working-directory: ./target-app
-        run: |
-          corepack yarn start &
-          npx wait-on -t 60000 http://localhost:3000 http://localhost:3001/testData/seed
+          corepack yarn copy:mock:awsexports || cp scripts/mock-aws-exports.js src/aws-exports.js
+          corepack yarn copy:mock:awsexportses5 || cp scripts/mock-aws-exports-es5.js aws-exports-es5.js
 
       - name: Install ReleaseGuard Dependencies
         run: npm ci
@@ -48,8 +46,12 @@ jobs:
       - name: Install Playwright Chromium & System Dependencies
         run: npx playwright install chromium --with-deps
 
-      - name: Execute Critical-Flow Regression Gate
-        run: npx playwright test
+      - name: Start Target App & Execute Critical-Flow Gate
+        run: |
+          cd target-app && corepack yarn start &
+          cd ..
+          npx wait-on -t 120000 http://localhost:3000 http://localhost:3001
+          npx playwright test
 
       - name: Upload Playwright Test Report & Failure Traces
         uses: actions/upload-artifact@v4
