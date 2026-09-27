@@ -21,7 +21,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Checkout Target Application (Pinned Reference)
         uses: actions/checkout@v4
@@ -35,10 +34,10 @@ jobs:
         env:
           CYPRESS_INSTALL_BINARY: 0
         run: |
-          corepack enable
-          corepack yarn install --frozen-lockfile
-          corepack yarn copy:mock:awsexports || cp scripts/mock-aws-exports.js src/aws-exports.js
-          corepack yarn copy:mock:awsexportses5 || cp scripts/mock-aws-exports-es5.js aws-exports-es5.js
+          sudo corepack enable || true
+          yarn install --frozen-lockfile
+          cp scripts/mock-aws-exports.js src/aws-exports.js
+          cp scripts/mock-aws-exports-es5.js aws-exports-es5.js
 
       - name: Install ReleaseGuard Dependencies
         run: npm ci
@@ -48,9 +47,21 @@ jobs:
 
       - name: Start Target App & Execute Critical-Flow Gate
         run: |
-          cd target-app && corepack yarn start &
+          cd target-app
+          yarn start &
           cd ..
-          npx wait-on -t 120000 http://localhost:3000 http://localhost:3001
+          echo "Waiting for services on port 3000 and 3001..."
+          for i in {1..60}; do
+            if curl -s http://localhost:3000 >/dev/null && curl -s http://localhost:3001 >/dev/null; then
+              echo "Both services are ready!"
+              break
+            fi
+            sleep 2
+          done
+          if ! curl -s http://localhost:3000 >/dev/null || ! curl -s http://localhost:3001 >/dev/null; then
+            echo "Error: Services failed to start within 120 seconds."
+            exit 1
+          fi
           npx playwright test
 
       - name: Upload Playwright Test Report & Failure Traces
