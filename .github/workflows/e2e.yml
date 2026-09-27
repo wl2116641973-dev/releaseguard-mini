@@ -17,10 +17,10 @@ jobs:
       - name: Checkout ReleaseGuard Mini
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Checkout Target Application (Pinned Reference)
         uses: actions/checkout@v4
@@ -34,8 +34,7 @@ jobs:
         env:
           CYPRESS_INSTALL_BINARY: 0
         run: |
-          sudo corepack enable || true
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --ignore-engines
           cp scripts/mock-aws-exports.js src/aws-exports.js
           cp scripts/mock-aws-exports-es5.js aws-exports-es5.js
 
@@ -48,18 +47,19 @@ jobs:
       - name: Start Target App & Execute Critical-Flow Gate
         run: |
           cd target-app
-          yarn start &
+          yarn start > ../target-app.log 2>&1 &
           cd ..
           echo "Waiting for services on port 3000 and 3001..."
           for i in {1..60}; do
-            if curl -s http://localhost:3000 >/dev/null && curl -s http://localhost:3001 >/dev/null; then
+            if curl -s -f http://localhost:3000 >/dev/null && curl -s -f http://localhost:3001 >/dev/null; then
               echo "Both services are ready!"
               break
             fi
             sleep 2
           done
-          if ! curl -s http://localhost:3000 >/dev/null || ! curl -s http://localhost:3001 >/dev/null; then
-            echo "Error: Services failed to start within 120 seconds."
+          if ! curl -s -f http://localhost:3000 >/dev/null || ! curl -s -f http://localhost:3001 >/dev/null; then
+            echo "Error: Services failed to start within 120 seconds. Printing target-app.log:"
+            cat target-app.log
             exit 1
           fi
           npx playwright test
@@ -72,4 +72,5 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            target-app.log
           retention-days: 14
