@@ -9,7 +9,7 @@
 **Programming & Tech** > **QA & Review** > **Web Application Testing**
 
 ## Search Tags
-playwright saas-qa web-testing utomated-testing egression-testing
+playwright saas-qa web-testing automated-testing regression-testing
 
 ---
 
@@ -20,9 +20,9 @@ playwright saas-qa web-testing utomated-testing egression-testing
 
 | Tier | Name | Target Customer | Scope & Deliverables | Delivery Time | Revisions | Suggested Launch Price |
 |---|---|---|---|---|---|---|
-| **Basic** | Smoke & Critical Flow QA | Solo founders with immediate pre-launch panic | - 3 Critical User Flows<br>- Thorough manual exploratory QA<br>- Structured Defect Report (Markdown/PDF)<br>- Full reproduction steps + screenshots<br>- *No test code / No CI* | 2 Days | 1 | **** |
-| **Standard** | Core Playwright Regression | Small SaaS teams needing automated guardrails | - 4 Critical User Flows<br>- 6 Automated Playwright Tests (TypeScript)<br>- Page Object Model architecture<br>- Native HTML Test Report<br>- Failure evidence (traces, screenshots)<br>- Full source code handoff | 3 Days | 1 | **** |
-| **Premium** | Complete LaunchGuard + CI | Growing SaaS teams shipping continuous releases | - 5 Critical User Flows<br>- 8–10 Automated Playwright Tests<br>- GitHub Actions CI workflow setup (.github/workflows/e2e.yml)<br>- Video & Trace failure artifacts<br>- Comprehensive QA findings + Client Handoff report<br>- Zero-flakiness guarantee (3 consecutive clean runs) | 4 Days | 2 | **** |
+| **Basic** | Smoke & Critical Flow QA | Solo founders with immediate pre-launch panic | - 3 Critical User Flows<br>- Thorough manual exploratory QA<br>- Structured Defect Report (Markdown/PDF)<br>- Full reproduction steps + screenshots<br>- *No test code / No CI* | 2 Days | 1 | $49 |
+| **Standard** | Core Playwright Regression | Small SaaS teams needing automated guardrails | - 4 Critical User Flows<br>- 6 Automated Playwright Tests (TypeScript)<br>- Page Object Model architecture<br>- Native HTML Test Report<br>- Failure evidence (traces, screenshots)<br>- Full source code handoff | 3 Days | 1 | $89 |
+| **Premium** | Complete LaunchGuard + CI | Growing SaaS teams shipping continuous releases | - 5 Critical User Flows<br>- 8–10 Automated Playwright Tests<br>- GitHub Actions CI workflow setup (.github/workflows/e2e.yml)<br>- Video & Trace failure artifacts<br>- Comprehensive QA findings + Client Handoff report<br>- Verified test stability (3 consecutive clean runs in baseline environment) | 4 Days | 2 | $149 |
 
 ---
 

@@ -150,9 +150,9 @@
   <div class="badge-bar">
     <span class="badge green">✓ 12/12 Passing</span>
     <span class="badge blue">⚡ 38s Suite Runtime</span>
-    <span class="badge green">🛡️ 0% Flakiness (3 Consecutive Runs)</span>
+    <span class="badge green">🛡️ 0 Observed Flaky Runs (48/48 Passes)</span>
     <span class="badge">Playwright + TypeScript</span>
-    <span class="badge red">1 Critical BOLA Discovered</span>
+    <span class="badge blue">🔍 Pre-Launch Defect & Risk Findings</span>
   </div>
 </header>
 
@@ -235,16 +235,20 @@
   </section>
 
   <section>
-    <h2>🔍 High-Impact Exploratory Defects Surfaced</h2>
-    <p>Beyond automation, ReleaseGuard's exploratory audit revealed critical pre-launch vulnerabilities in the target application:</p>
+    <h2>🔍 Pre-Launch QA Findings & Code Review Notes</h2>
+    <p>Beyond automation, ReleaseGuard documented findings across observed defects and code review risks:</p>
     
-    <div class="card" style="border-left: 4px solid var(--danger); margin-bottom: 12px;">
-      <h3 style="color: var(--danger);">DEF-SEC-01: Broken Object-Level Authorization (BOLA / IDOR)</h3>
-      <p><code>PATCH /users/:userId</code> and <code>GET /transactions/:transactionId</code> authenticate users but never verify object ownership. Any logged-in user can overwrite another user's profile or inspect private transactions across tenants.</p>
+    <div class="card" style="border-left: 4px solid var(--accent); margin-bottom: 12px;">
+      <h3 style="color: var(--text-heading);">OFD-01 (Observed Functional Defect): Irreversible Notification Dismissal</h3>
+      <p>Clicking "Dismiss" permanently hides the notification from the UI without an archive or read-history toggle.</p>
     </div>
     <div class="card" style="border-left: 4px solid var(--warning); margin-bottom: 12px;">
-      <h3 style="color: var(--warning);">DEF-01: Non-Atomic Financial Ledger Mutations</h3>
-      <p>A single peer-to-peer transfer runs 4 separate, un-bracketed database writes. A server restart mid-sequence permanently desynchronizes sender and receiver balance records.</p>
+      <h3 style="color: var(--warning);">CRR-01 (Code Review Risk): Missing Explicit User Ownership Checks</h3>
+      <p><code>PATCH /users/:userId</code> and <code>GET /transactions/:transactionId</code> authenticate users but don't explicitly verify whether the caller owns the targeted record.</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--warning); margin-bottom: 12px;">
+      <h3 style="color: var(--warning);">CRR-02 (Code Review Risk): Non-Atomic Financial Ledger Mutations</h3>
+      <p>Peer-to-peer payments trigger 4 separate synchronous file writes without an atomic rollback boundary.</p>
     </div>
   </section>
 
@@ -272,7 +276,7 @@
         <div>
           <h3>Flagship Release Gate</h3>
           <div class="price-val">$149</div>
-          <p>5 Critical Flows, Full Failure Forensics (Trace/Video), Security & Authorization Audit, Executive GO/HOLD Verdict.</p>
+          <p>5 Critical Flows, Full Failure Forensics (Trace/Video), Exploratory Code Review & Defect Report, Executive GO/HOLD Verdict.</p>
         </div>
         <a href="https://www.upwork.com/" class="cta-btn">Order Flagship</a>
       </div>

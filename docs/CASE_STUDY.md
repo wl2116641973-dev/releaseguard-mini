@@ -7,16 +7,18 @@
 
 ---
 
-## 1. The Challenge
+## 1. The Challenge & Context
 
-When an early-stage SaaS founder or small engineering team approaches launch day, they face an asymmetric risk:
-- **Move fast**: They cannot afford months of bloated enterprise testing or $10,000/mo QA departments.
+Early-stage SaaS founders and small engineering teams approaching launch day face an asymmetric risk:
+- **Move fast**: They cannot afford months of bloated enterprise testing or expensive QA departments.
 - **Don't break core trust**: If user authentication fails, payments desync, or settings vanish after refresh, customer trust is permanently damaged on Day 1.
 
-The client needed an independent QA specialist who could:
-1. Rapidly onboard onto an unfamiliar full-stack codebase (React 18, Vite, Express, lowdb).
+This case study demonstrates a pre-launch QA assessment and automated regression gate applied to an open-source full-stack financial SaaS platform (`cypress-realworld-app` — React 18, Vite, Express, lowdb).
+
+The demonstration proves that an independent QA specialist can:
+1. Rapidly onboard onto an unfamiliar full-stack codebase.
 2. Prioritize revenue-critical business flows rather than getting lost in superficial UI checks.
-3. Deliver a rock-solid, zero-flakiness Playwright regression suite that runs in seconds, not hours.
+3. Deliver a deterministic Playwright regression suite that runs in seconds, not hours.
 4. Provide undeniable forensic proof (traces, screenshots, videos) when a bug occurs.
 
 ---
@@ -45,18 +47,21 @@ A major reason clients abandon freelance test suites is **test flakiness** (fals
 
 ---
 
-## 3. Real Exploratory Discoveries
+## 3. Findings Surfaced During Assessment
 
-A true QA engineer does not merely write happy-path automation—they explore boundary conditions. During this assessment, we surfaced **critical pre-launch findings**:
+A thorough QA assessment combines automated regression with exploratory manual testing and code review. During this drill, findings were strictly categorized:
 
-1. **Broken Object-Level Authorization (BOLA / IDOR — DEF-SEC-01)**:
-   We discovered that `PATCH /users/:userId` and `GET /transactions/:transactionId` only check if the requester is logged in, but never verify whether the requester owns the target ID. Any authenticated user could overwrite another user's profile or read private peer-to-peer payments.
-2. **Non-Atomic Ledger Mutations (DEF-01)**:
-   A single payment triggers four un-bracketed database writes. A server restart mid-execution permanently desynchronizes sender and receiver balances.
-3. **Monetary Truncation (DEF-02)**:
-   Backend sanitizers applied `.toInt()`, silently truncating decimal cents on non-integer inputs without returning an error.
+### Category A: Observed Functional Defects (Live Browser Evidence)
+- **OFD-01 (UX / Navigation)**: Dismissed notifications cannot be viewed or retrieved because no archive view exists.
+- **OFD-02 (State / Timing)**: Transient sidebar balance display lag on fast navigation post-payment.
 
-These findings provided immediate, high-value consulting insights that saved the application from catastrophic post-launch security disclosures.
+### Category B: Code Review Risks (Source Inspection)
+- **CRR-01 (Authorization Logic)**: `PATCH /users/:userId` and `GET /transactions/:transactionId` verify session validity but do not check whether the authenticated user ID matches the target record ID. Flagged for engineering review.
+- **CRR-02 (Data Integrity)**: Multi-statement ledger writes in lowdb execute without transactional rollback guarantees.
+- **CRR-03 (Validation)**: Sanitizer applies `.toInt()`, silently truncating decimal cents on non-integer inputs.
+
+### Category C: Testability & Maintainability
+- **TMN-01 (Locator Strategy)**: Material-UI FormControl attaches `data-test` to an outer wrapper `div` rather than the native `<input>`, necessitating specialized selector handling.
 
 ---
 
@@ -73,18 +78,20 @@ To prove that the suite does not yield false positives, we conducted an intentio
 
 ---
 
-## 5. Tangible Outcomes & Client Value
+## 5. Tangible Outcomes & Verification Metrics
 
-| Metric | Result | Commercial Impact |
+| Metric | Result | Commercial Relevance |
 |---|---|---|
-| **Suite Reliability** | **3 consecutive 100% pass runs** | 0 flakiness, zero maintenance headaches |
+| **Suite Reliability** | **48/48 test passes across 4 consecutive runs** | Deterministic baseline; zero observed flakiness under seed conditions |
 | **Execution Speed** | **12 tests in ~38 seconds** | Fast feedback in CI/CD without slowing developers |
 | **Dependencies** | **Playwright + TypeScript only** | Zero Docker, zero Allure, zero bloated baggage |
-| **Defects Flagged** | **1 Critical Security (BOLA) + 4 Functional** | Saved client from Day-1 account takeover exploit |
-| **Release Verdict** | **GO WITH CONDITIONS** | Clear, actionable decision for the SaaS founder |
+| **Findings Documented** | **2 Observed Functional + 3 Code Review Risks + 1 Testability Note** | Clear, actionable triage for product engineering |
+| **Release Verdict** | **GO WITH CONDITIONS** | Objective release gate decision |
 
 ---
 
-## 6. Client Testimonial (Demonstrated Value)
+## 6. Key Takeaways
 
-> *"ReleaseGuard Mini didn't just give us a bunch of Playwright scripts that broke the next week. They found a critical BOLA authorization flaw in our API that our developers completely missed, gave us a 38-second regression gate that runs on every PR, and handed over an undeniable video/trace whenever something breaks. Worth 10x what we paid."*
+1. **Automation without determinism is technical debt**: By anchoring tests to a lightweight seed endpoint and native web-first assertions, execution remains fast and predictable.
+2. **Defect clarity matters more than volume**: Categorizing findings by observed runtime behavior vs. code inspection prevents panic and lets engineering leads triage effectively.
+3. **Forensic traces eliminate reproduction debates**: Interactive trace archives show the exact line of code, network response, and DOM state that caused a failure.

@@ -37,7 +37,7 @@
   - Deterministic state isolation using `beforeEach` with `POST /testData/seed`, preventing cross-test data pollution.
   - Strict Playwright configuration: sequential single-worker execution, native HTML reports, trace/video recorded only on failure.
 - **Code Audit**:
-  - Discovered and documented real architectural and security flaws (`DEF-SEC-01` BOLA vulnerability in `backend/user-routes.ts`), proving that the engineer understands backend security, not just clicking buttons.
+  - Discovered and documented real architectural and code review risks (`CRR-01` missing explicit user ownership verification in `backend/user-routes.ts`), proving that the engineer understands full-stack backend mechanics, not just clicking buttons.
 - **Score**: **9.8 / 10**
 
 ---

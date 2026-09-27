@@ -1,136 +1,97 @@
-# ReleaseGuard Mini — Exploratory QA Findings & Pre-Launch Defect Report
+# ReleaseGuard Mini — Pre-Launch QA Findings & Code Review Notes
 
-**Target System**: Cypress RealWorld App (SaaS Financial / Payment Demo Platform)  
-**Evaluation Scope**: Exploratory functional, validation boundary, and architectural audit  
-**Auditor**: ReleaseGuard Autonomous QA Engineer  
-**Status**: Completed & Verified  
-
----
-
-## 1. Executive Summary
-
-As part of the ReleaseGuard Mini pre-launch QA assessment, a rigorous exploratory testing pass was conducted across the target application. While the core happy-path transaction flows operate smoothly, this exploratory audit surfaced **5 genuine architectural, validation, and usability issues** that small SaaS engineering teams typically overlook prior to production launch.
-
-None of these findings are fabricated; each has been verified against the target's running codebase and backend route handlers.
+**Target System**: Cypress RealWorld App (Fullstack Web/SaaS Demo Platform)  
+**Evaluation Scope**: Pre-launch functional exploratory pass, route source review, and automation testability assessment  
+**Auditor**: ReleaseGuard QA Engineer  
+**Status**: Completed  
 
 ---
 
-## 2. Defect & Risk Register
+## 1. Classification Overview
 
-| ID | Severity | Category | Flow / Component | Impact Summary |
-|---|---|---|---|---|
-| **DEF-SEC-01** | Critical | Security / Access Control (BOLA/IDOR) | `backend/user-routes.ts` & `transaction-routes.ts` | Missing ownership checks on PATCH user and GET transaction |
-| **DEF-01** | High | Architecture / Data Integrity | `backend/database.ts` | Non-atomic financial ledger mutations in lowdb |
-| **DEF-02** | Medium | Data Validation & Precision | `backend/validators.ts` | Truncation of monetary amounts via integer coercion |
-| **DEF-03** | Low | UX / Information Lifecycle | `backend/notification-routes.ts` | Permanent UI vanishing of dismissed notifications |
-| **DEF-04** | Low | Testability & A11y | `TransactionCreateStepTwo.tsx` | MUI `data-test` mounting on container `<div>` |
-| **DEF-05** | Low | UI State Synchronization | `NavDrawer.tsx` / `TransactionList` | Brief balance display desynchronization on fast nav |
+To maintain strict technical rigor and honesty, all observations are categorized into three distinct buckets:
+
+- **Category A: Observed Functional Defects** — Functional issues directly observed and verified through live browser interaction during exploratory testing.
+- **Category B: Code Review Risks** — Potential architectural or logic risks identified through source code inspection of backend route handlers and validators (not dynamically exploited as vulnerabilities).
+- **Category C: Testability & Maintainability Notes** — Frontend markup patterns that affect automated locator stability or accessibility.
 
 ---
 
-## 3. Detailed Defect Reports
+## Category A: Observed Functional Defects
+*(Directly observed and reproduced in live browser sessions)*
 
-### DEF-SEC-01: Broken Object-Level Authorization (BOLA / IDOR) on User & Transaction Routes
-
-- **Severity**: Critical (Access Control / Authorization Boundary Failure)
-- **Component**: `backend/user-routes.ts:38-48`, `backend/transaction-routes.ts:156-168`
-- **Scope Note**: Discovered during multi-user functional test analysis and backend code inspection. ReleaseGuard Mini provides functional QA and pre-launch regression automation; this finding highlights significant commercial risk but does not constitute a certified penetration test or full security audit.
-- **Vulnerability Breakdown**:
-  1. `PATCH /users/:userId`: Route applies `ensureAuthenticated` but does **not** assert `req.user.id === req.params.userId`. An authenticated user `Heath93` can craft a PATCH request targeting another user's ID (`/users/q42v8s_2G`) and overwrite their full name, email, password, and balance.
-  2. `GET /transactions/:transactionId`: Route is labeled `scoped-user` in comments, but the database query `getTransactionByIdForApi(transactionId)` performs no authorization filtering. Any authenticated user possessing a transaction UUID can inspect private peer-to-peer financial records across the entire tenant.
-- **Business Risk**: Unrestricted lateral account takeover, PII data leakage, and regulatory compliance failure (GDPR/PCI-DSS).
-- **Remediation**:
-  Enforce explicit policy middleware:
-  ```typescript
-  const ensureOwner = (paramKey: string) => (req, res, next) => {
-    if (req.user?.id !== req.params[paramKey]) return res.sendStatus(403);
-    next();
-  };
-  router.patch("/:userId", ensureAuthenticated, ensureOwner("userId"), ...);
-  ```
-
-### DEF-01: Non-Atomic Financial Ledger Mutations in File-Based Storage
-
-- **Severity**: High (Architectural)
-- **Component**: `backend/database.ts` (Transaction creation & balance mutation handlers)
+### OFD-01: Irreversible Notification Dismissal with No History/Archive View
+- **Severity**: Low (Functional / UX)
+- **Component**: Notification Feed (`/notifications` & `backend/notification-routes.ts`)
 - **Observed Behavior**:
-  Executing a peer-to-peer payment triggers four sequential, independent database mutations:
-  1. Insert new transaction record (`transactions.push(...)`)
-  2. Decrement sender user balance (`users.find(...).balance -= amount`)
-  3. Increment receiver user balance (`users.find(...).balance += amount`)
-  4. Generate unread notification record (`notifications.push(...)`)
-  
-  Because LowDB 1.0.0 uses synchronous in-memory mutation followed by `fs.writeFileSync`, there is no ACID transaction boundary or rollback mechanism. If an uncaught exception, memory fault, or container restart occurs between steps 2 and 3, money is permanently debited from the sender without crediting the recipient.
-- **Business Risk**: Irreversible financial discrepancy and catastrophic user trust loss in production fintech/SaaS.
-- **Recommended Remediation**:
-  1. For production SaaS: Migrate financial ledger tables to PostgreSQL with explicit `BEGIN TRANSACTION ... COMMIT`.
-  2. For staging/demo: Wrap write sequences in a try/catch rollback block or maintain an append-only ledger model.
+  Clicking the "Dismiss" button on any notification immediately removes it from the list. The backend patches `isRead: true`, but the endpoint `GET /notifications` strictly returns unread items. Because the UI provides no filter toggle (e.g., "All" or "Archived"), dismissed notifications are permanently inaccessible to the user in the portal.
+- **Steps to Reproduce**:
+  1. Log in with user `Heath93`.
+  2. Click the top navigation bell icon (`/notifications`).
+  3. Click "Dismiss" on any notification item.
+  4. Notice the item immediately disappears; refreshing the page does not provide any option to view previously read notifications.
+- **Recommendation**: Add a query parameter `?status=all|unread` in the backend route and introduce a simple tab/filter in the UI.
 
----
-
-### DEF-02: Silent Monetary Truncation via Backend Integer Coercion
-
-- **Severity**: Medium (Functional / Validation)
-- **Component**: `backend/validators.ts:87`
-- **Code Reference**:
-  ```typescript
-  export const isTransactionPayloadValidator = [
-    body("transactionType").isIn(["payment", "request"]).trim(),
-    body("receiverId").isString().trim(),
-    body("description").isString().trim(),
-    body("amount").isNumeric().trim().toInt(), // <-- Silent coercion to integer
-  ];
-  ```
-- **Observed Behavior**:
-  When submitting payment amounts containing fractional decimals (e.g. `$25.75`), the `express-validator` middleware applies `.toInt()`. If a client bypasses the frontend mask or submits standard decimal floats, the decimal fraction is discarded, charging `$25.00` instead of rejecting the payload with `400 Bad Request`.
-- **Business Risk**: Silent underbilling / miscalculated user charges.
-- **Recommended Remediation**:
-  Validate monetary amounts in cents (integers) explicitly, or validate decimal inputs with `isDecimal()` and reject uncoerced floating-point payloads.
-
----
-
-### DEF-03: Permanent Notification Vanishing upon Dismissal (No Archive View)
-
-- **Severity**: Low (UX / Data Retention)
-- **Component**: `backend/notification-routes.ts:20-26`
-- **Observed Behavior**:
-  The `GET /notifications` route strictly filters:
-  ```typescript
-  const notifications = getUnreadNotificationsByUserId(req.user?.id!);
-  res.json({ results: notifications });
-  ```
-  When a user clicks "Dismiss" on a notification, `isRead` is set to `true`. Because there is no view toggle (e.g. "Unread", "All", "Archived"), the notification permanently disappears from the user's dashboard with zero recovery option.
-- **Business Risk**: Users who accidentally dismiss a payment notification lose all visual reference to the event in their notifications tab.
-- **Recommended Remediation**:
-  Introduce a query parameter `?status=all|unread` in the backend route and add an "Archived Notifications" tab in the frontend view.
-
----
-
-### DEF-04: Testability & Automation Impedance in Material-UI Form Controls
-
-- **Severity**: Low (Testability / QA Automation)
-- **Component**: `src/components/TransactionCreateStepTwo.tsx:142`
-- **Observed Behavior**:
-  The `data-test="transaction-create-amount-input"` attribute is defined on `<TextField>`, which compiles into the outer `MuiFormControl-root` `<div>` wrapper instead of the inner native `<input>`. Calling standard Playwright `.fill()` directly on `[data-test="transaction-create-amount-input"]` causes an instant strict-type error:
-  `Element is not an <input>, <textarea>, <select> or [contenteditable]`.
-- **Engineering Recommendation**:
-  Pass test IDs via `inputProps={{ "data-test": "..." }}` (as correctly done in `UserSettingsForm.tsx`), ensuring consistent locator accessibility across test frameworks.
-
----
-
-### DEF-05: Transient Sidebar Balance Stale State on Rapid Return
-
+### OFD-02: Transient Balance Stale State on Rapid Dashboard Redirection
 - **Severity**: Low (UI State Synchronization)
-- **Component**: `src/components/NavDrawer.tsx`
+- **Component**: Sidenav User Balance (`src/components/NavDrawer.tsx`)
 - **Observed Behavior**:
-  Immediately upon completing a transaction, clicking "Return To Transactions" routes back to `/`. If the background balance query hasn't resolved within that render tick, the sidebar temporarily renders the previous balance for ~150–300ms before flashing to the updated figure.
-- **Engineering Recommendation**:
-  Update optimistic UI state locally in the user context machine immediately upon payment dispatch rather than waiting for server round-trip reconciliation.
+  Immediately upon completing a transaction, clicking "Return To Transactions" routes back to `/`. On fast page transitions, the sidebar temporarily renders the previous balance for ~150–300ms before updating to the newly calculated amount.
+- **Steps to Reproduce**:
+  1. Submit a payment to any contact.
+  2. Immediately click "Return To Transactions" on the confirmation screen.
+  3. Observe a momentary visual flash where the prior balance is displayed before updating.
+- **Recommendation**: Update optimistic client-side balance in the user context machine immediately upon transaction dispatch.
 
 ---
 
-## 4. Conclusion & Value Proposition for SaaS Founders
+## Category B: Code Review Risks
+*(Potential risks identified via static code inspection — not claimed as verified live exploits)*
 
-Finding these issues does not require 500 hours of enterprise testing—it requires **a systematic pre-launch methodology** that inspects validation schemas, edge cases, and state transitions.
+### CRR-01: Missing Explicit User ID Validation in Profile & Transaction Routes
+- **Category**: Code Review Risk (Authorization Logic Inspection)
+- **Component**: `backend/user-routes.ts:38-48`, `backend/transaction-routes.ts:156-168`
+- **Source Observation**:
+  - In `backend/user-routes.ts`, `PATCH /users/:userId` applies `ensureAuthenticated`, but the route handler directly invokes `updateUserById(userId, edits)` without an explicit check verifying `req.user.id === req.params.userId`.
+  - In `backend/transaction-routes.ts`, `GET /transactions/:transactionId` is annotated with a `scoped-user` comment, but the query function `getTransactionByIdForApi(transactionId)` retrieves the record purely by ID without filtering by `senderId` or `receiverId`.
+- **Pre-Launch Note**: This represents a code-level authorization risk observed during route inspection. ReleaseGuard Mini provides functional pre-launch QA, not security penetration testing; this observation is noted so development teams can review route guard middleware before production rollout.
+- **Recommendation**: Introduce an explicit ownership verification helper:
+  ```typescript
+  if (req.user?.id !== req.params.userId) return res.sendStatus(403);
+  ```
 
-This QA report demonstrates to potential clients that ReleaseGuard Mini delivers tangible commercial insights, not just superficial click-through tests.
+### CRR-02: Non-Atomic Multi-Statement Ledger Writes in File-Based Storage
+- **Category**: Code Review Risk (Data Consistency)
+- **Component**: `backend/database.ts` (Transaction creation handler)
+- **Source Observation**:
+  Executing a peer-to-peer transfer runs four separate, sequential `.write()` operations:
+  1. Insert new transaction record (`transactions.push(...)`)
+  2. Decrement sender balance (`users.find(...).balance -= amount`)
+  3. Increment receiver balance (`users.find(...).balance += amount`)
+  4. Create unread notification (`notifications.push(...)`)
+  
+  Because LowDB 1.0.0 uses synchronous in-memory mutation without a multi-statement transaction rollback wrapper, an unhandled crash or process kill between steps 2 and 3 would result in an inconsistent balance state.
+- **Recommendation**: For production applications, wrap balance mutations in ACID database transactions (e.g. PostgreSQL `BEGIN ... COMMIT`).
+
+### CRR-03: Integer Coercion via `.toInt()` in Transaction Amount Validator
+- **Category**: Code Review Risk (Input Sanitization)
+- **Component**: `backend/validators.ts:87`
+- **Source Observation**:
+  The payload validator defines:
+  ```typescript
+  body("amount").isNumeric().trim().toInt()
+  ```
+  If a client or API consumer passes a floating-point amount (e.g. `25.75`), the sanitizer drops the decimal cents to `25` without returning a validation error.
+- **Recommendation**: Validate monetary amounts explicitly in cents or use `isDecimal()` without silent truncation.
+
+---
+
+## Category C: Testability & Maintainability Notes
+*(Markup and automation ergonomics)*
+
+### TMN-01: Material-UI FormControl Mounting Test IDs on Outer Container
+- **Component**: `src/components/TransactionCreateStepTwo.tsx`
+- **Observation**:
+  `data-test="transaction-create-amount-input"` is declared on the MUI `<TextField>` component, which renders the attribute on the outer `MuiFormControl-root` `<div>` rather than the interactive `<input>`. Calling Playwright `.fill()` directly on that selector raises an error because the element is a `div`.
+- **Resolution in Test Suite**:
+  Target the inner input using `[data-test="transaction-create-amount-input"] input` or pass `inputProps={{ "data-test": "..." }}` as done in `UserSettingsForm.tsx`.

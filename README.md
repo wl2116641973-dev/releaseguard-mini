@@ -52,19 +52,20 @@ If you are a **SaaS Founder**, **Solo Developer**, or **Product Lead** hiring on
 
 ---
 
-## 🔍 Real Pre-Launch Flaws Surfaced (Exploratory Findings)
+## 🔍 Pre-Launch QA Findings & Code Review Notes
 
-During exploratory auditing of the target application, ReleaseGuard uncovered **5 genuine architectural, validation, and security issues**:
+During exploratory testing and source inspection of the target application, ReleaseGuard documented findings across three clear categories:
 
-| Defect ID | Severity | Category | Summary |
+| ID | Category | Component | Summary |
 |---|---|---|---|
-| **DEF-SEC-01** | **Critical** | **Security (BOLA / IDOR)** | Missing ownership checks on `PATCH /users/:userId` and `GET /transactions/:transactionId`. Any authenticated user can modify other users' profiles or read private payments. |
-| **DEF-01** | **High** | **Data Integrity** | Non-atomic financial ledger mutations in file-based storage. Server restart mid-payment desynchronizes sender/receiver balances. |
-| **DEF-02** | **Medium** | **Data Validation** | Silent monetary truncation via backend `.toInt()` coercion, dropping fractional decimal cents without returning `400 Bad Request`. |
-| **DEF-03** | **Low** | **UX / Data Lifecycle** | Dismissed notifications vanish permanently from the UI without an archive or history filter. |
-| **DEF-04** | **Low** | **Testability** | Material-UI `data-test` mounting on outer container `<div>` instead of the inner `<input>` element. |
+| **OFD-01** | Observed Functional Defect | Notification Feed | Irreversible notification dismissal with no archive or read history view in UI. |
+| **OFD-02** | Observed Functional Defect | Sidenav Balance | Transient visual balance display lag (~200ms) on rapid post-payment page redirect. |
+| **CRR-01** | Code Review Risk | User & Txn Routes | Missing explicit user ID comparison in `PATCH /users/:userId` and `GET /transactions/:transactionId`. |
+| **CRR-02** | Code Review Risk | Database Layer | Non-atomic multi-statement ledger writes in file-based storage. |
+| **CRR-03** | Code Review Risk | Request Validators | Silent decimal cents truncation via backend `.toInt()` coercion. |
+| **TMN-01** | Testability Note | Transaction Step Two | Material-UI `data-test` mounting on outer container `<div>` instead of native `<input>`. |
 
-*Full technical details and remediation code in [docs/QA_FINDINGS.md](docs/QA_FINDINGS.md).*
+*Full technical details and code references in [docs/QA_FINDINGS.md](docs/QA_FINDINGS.md).*
 
 ---
 
@@ -158,7 +159,7 @@ Available for hire on **Fiverr**, **Upwork**, and **Contra**:
 |---|---|---|---|
 | **Starter Smoke Gate** | **$49** | 1 Critical Flow (Auth + Core Journey), POM structure, Local run instructions, Bug Report if found. | 2 Days |
 | **Standard Pre-Launch Guard** | **$89** | 3 Critical Flows, Deterministic Test Isolation, Visual HTML Report, CI/CD Workflow (`.github/workflows/e2e.yml`), Defect Report. | 3 Days |
-| **Flagship Pre-Launch Suite** | **$149** | 5 Critical Flows, Full Failure Forensics (Trace/Video), Complete Client Handoff, API Exploration & Security Risk Audit, Executive GO/HOLD Verdict. | 5 Days |
+| **Flagship Pre-Launch Suite** | **$149** | 5 Critical Flows, Full Failure Forensics (Trace/Video), Complete Client Handoff, Exploratory Code Review & Defect Report, Executive GO/HOLD Verdict. | 5 Days |
 
 👉 **Ready to secure your release?** Connect on Upwork or message directly for an immediate pre-launch assessment.
 

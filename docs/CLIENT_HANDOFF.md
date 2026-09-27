@@ -12,11 +12,11 @@
 ReleaseGuard Mini has completed a full pre-launch quality assurance cycle on your Web/SaaS platform. We designed and implemented **12 deterministic, automated regression tests** covering the 4 mission-critical business flows that protect your revenue, user sessions, and core data.
 
 ### Pre-Launch Verdict: **GO WITH CONDITIONS**
-- **Critical Flow Regression**: **100% PASS** (12/12 passed across 3 consecutive runs, 0 flaky, ~38s runtime).
+- **Critical Flow Regression**: **100% PASS** (48/48 passed across 4 consecutive runs, 0 observed flakiness under seed conditions, ~38s runtime).
 - **Core User Journeys**: Authentication, financial transaction execution, notifications, and profile settings are verified and guarded against regressions.
 - **Conditions to Address**:
-  - Remediate `DEF-SEC-01` (BOLA vulnerability on user PATCH and transaction GET) prior to public multi-tenant release.
-  - Review `DEF-01` (non-atomic file-based mutations) before scaling financial transaction volume.
+  - Address `CRR-01` (missing explicit user ownership check on profile update and transaction query) prior to public multi-tenant release.
+  - Review `CRR-02` (non-atomic ledger mutations) before scaling financial transaction volume.
 
 ---
 
@@ -92,10 +92,11 @@ To test a new feature:
 
 Please review `docs/QA_FINDINGS.md` for complete technical details. Recommended action prior to public release:
 
-- [ ] **P0 (Security)**: Add ownership validation middleware to `PATCH /users/:userId` and `GET /transactions/:transactionId` (`DEF-SEC-01`).
-- [ ] **P1 (Data Integrity)**: Transition financial mutations to atomic transactions (`DEF-01`).
-- [ ] **P2 (Validation)**: Reject fractional decimal inputs or normalize to cents explicitly instead of silent `.toInt()` coercion (`DEF-02`).
-- [ ] **P3 (UX)**: Provide an "Archived Notifications" tab so dismissed notifications remain retrievable (`DEF-03`).
+- [ ] **P1 (Code Review Risk)**: Add ownership validation middleware to `PATCH /users/:userId` and `GET /transactions/:transactionId` (`CRR-01`).
+- [ ] **P1 (Code Review Risk)**: Transition ledger mutations to atomic transactions (`CRR-02`).
+- [ ] **P2 (Code Review Risk)**: Reject fractional decimal inputs or normalize to cents explicitly instead of silent `.toInt()` coercion (`CRR-03`).
+- [ ] **P2 (Observed Defect)**: Provide an "Archived Notifications" tab so dismissed notifications remain retrievable (`OFD-01`).
+- [ ] **P3 (Observed Defect)**: Account for sidebar balance re-render latency or optimistic UI updates (`OFD-02`).
 
 ---
 
@@ -105,4 +106,4 @@ Need ongoing test suite maintenance, new flow coverage, or CI/CD optimization as
 
 - **Monthly Regression Maintenance ($89/mo)**: We maintain locators, update test dependencies, and review test reports for every major sprint release.
 - **New Feature Flow Expansion ($49/flow)**: Add complete end-to-end regression coverage for new SaaS features (e.g. Stripe checkout, onboarding wizard, team invites).
-- **Security & Authorization Audit ($149)**: Full manual and automated exploratory audit of OWASP Top 10 API vulnerabilities across your endpoints.
+- **Exploratory QA & Code Review Deep Dive ($149)**: Comprehensive manual edge-case testing, testability audit, and architectural code review.

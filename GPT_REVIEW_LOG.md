@@ -55,5 +55,6 @@ This log records every consultation with the independent technical reviewer (Ora
   - Adopted 100%: Provenance section added to `docs/SYNTHETIC_REGRESSION.md`; DEF-SEC-01 scope clarified in `docs/QA_FINDINGS.md`; flakiness claims toned to observed empirical passes in `README.md` and `portfolio/index.html`; founder-first value proposition highlighted on hero screens.
 - **Verification Method**: Verified `npm test` passing 12/12 in 38.6s; verified TypeScript 0-error build; verified clean tree.
 - **Actual Result**: Fully signed-off flagship freelance portfolio ready for live marketplace deployment.
+- **Final Classification Audit**: Formally separated findings into Category A (Observed Functional Defects: `OFD-01`, `OFD-02`), Category B (Code Review Risks: `CRR-01`, `CRR-02`, `CRR-03`), and Category C (Testability Notes: `TMN-01`) to eliminate any conflation between live runtime defects and code inspection risks.
 
 

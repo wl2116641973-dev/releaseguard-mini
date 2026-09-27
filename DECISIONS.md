@@ -38,6 +38,6 @@ This document records the non-obvious engineering decisions and trade-offs made 
 
 ---
 
-## DECISION 006: Framing the BOLA Authorization Vulnerability (`DEF-SEC-01`)
-- **Choice**: Document `DEF-SEC-01` as an authorization boundary defect discovered during multi-user functional testing, explicitly clarifying that ReleaseGuard provides pre-launch QA rather than dedicated penetration testing.
-- **Rationale**: Preserves the immense consulting value of uncovering a critical IDOR/BOLA exploit in the target API without falsely claiming out-of-scope security testing services.
+## DECISION 006: Framing the Authorization Finding (`CRR-01`)
+- **Choice**: Document `CRR-01` strictly as a Code Review Risk discovered during route and data model inspection, explicitly distinguishing code-level risks from live-verified functional defects (`OFD-01`, `OFD-02`).
+- **Rationale**: Preserves technical depth and architectural insight without misrepresenting pre-launch functional QA as a penetration testing or security audit service.

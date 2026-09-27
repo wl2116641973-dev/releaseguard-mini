@@ -58,13 +58,13 @@
 - **Target**: Real Exploratory QA
 - **Verified**:
   - Conducted exploratory manual and architectural audit of the target app.
-  - Authored `docs/QA_FINDINGS.md` documenting 5 real defects/risks:
-    - `DEF-SEC-01`: Broken Object-Level Authorization (BOLA / IDOR) on `PATCH /users/:userId` and `GET /transactions/:transactionId` (Critical)
-    - `DEF-01`: Non-atomic financial ledger mutations in file-based storage (High)
-    - `DEF-02`: Silent monetary truncation via backend `.toInt()` coercion (Medium)
-    - `DEF-03`: One-way notification dismissal with permanent UI vanishing (Low)
-    - `DEF-04`: Testability impedance due to MUI `data-test` mounting on outer `<div>` (Low)
-    - `DEF-05`: Transient sidebar balance stale state on rapid navigation (Low)
+  - Authored `docs/QA_FINDINGS.md` documenting 6 strictly categorized defects/risks:
+    - `OFD-01`: Notification dismissal without archive view (Category A: Observed Functional Defect)
+    - `OFD-02`: Transient sidebar balance display lag on fast navigation (Category A: Observed Functional Defect)
+    - `CRR-01`: Missing explicit user ownership verification in profile & transaction routes (Category B: Code Review Risk)
+    - `CRR-02`: Non-atomic financial ledger mutations in file-based storage (Category B: Code Review Risk)
+    - `CRR-03`: Silent monetary truncation via backend `.toInt()` coercion (Category B: Code Review Risk)
+    - `TMN-01`: Material-UI FormControl attaches `data-test` to outer wrapper `div` (Category C: Testability Note)
 
 ### PACKAGE 5 — PASS
 - **Target**: Controlled Synthetic Regression Drill

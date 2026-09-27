@@ -1,80 +1,72 @@
-# ReleaseGuard Mini — 3-Minute Video Demo & Loom Walkthrough Script
+# ReleaseGuard Mini — 45–60s High-Impact Video Demo Script
 
-**Audience**: SaaS Founders, Solo Developers, and Product Leads hiring on Upwork, Fiverr, or Contra  
-**Target Video Duration**: 2:45 – 3:00 minutes  
-**Tone**: Confident, direct, technical yet business-focused. No jargon filler.  
-
----
-
-## Scene 1: The Hook & The Release Dilemma (0:00 – 0:30)
-
-**[Screen Visual]**:  
-Full screen webcam or side-by-side with the ReleaseGuard `portfolio/index.html` hero section.
-
-**[Narration Script]**:  
-> "Hey there! If you're building a SaaS or Web application and preparing for launch, you know the sinking feeling right before deployment: *'Did we just break user authentication? Did our last commit break payments or profile settings?'*
-> 
-> Most founders rely on manual clicking or hire junior freelancers who hand over 50 lines of brittle code that breaks the next week.
-> 
-> My name is [Your Name], and this is **ReleaseGuard Mini**—a deterministic, 38-second pre-launch regression gate engineered with Playwright and TypeScript that catches critical bugs before your users do."
+**Format**: Fast-Paced Screen Recording + Voiceover (Loom / OBS / Screen Studio)  
+**Total Duration**: ~55–60 Seconds  
+**Audience**: SaaS Founders & Engineering Leads hiring on Upwork, Fiverr, and Contra  
+**Resolution**: 1920x1080 @ 60fps | Terminal Zoom: 125%  
 
 ---
 
-## Scene 2: The 4 Mission-Critical Business Flows (0:30 – 1:15)
+## 🎬 7-Scene Storyboard & Narration
 
-**[Screen Visual]**:  
-Switch to VS Code terminal. Run `npx playwright test`. Split-screen showing tests passing in Chromium.
-
-**[Narration Script]**:  
-> "Instead of writing superficial tests that only check if a button exists, I focus on the 4 flows that protect your revenue and reputation:
-> 
-> 1. **Authentication & Session Lifecycle**: Making sure users can log in, invalid logins are rejected, and logouts securely invalidate access.
-> 2. **Financial Transactions**: Executing peer-to-peer payments, asserting client validation, and mathematically verifying sidebar balance deduction—here deducting exactly twenty-five dollars from the ledger.
-> 3. **Real-Time Notifications**: Verifying that dismissals decrement unread badges and don't resurrect on refresh.
-> 4. **Account Settings Persistence**: Testing that profile edits survive a full browser reload, proving backend database persistence.
-> 
-> Watch the terminal: All 12 tests run sequentially with deterministic database resets in **under 39 seconds**. Zero flakiness. 100% repeatable."
+### 镜头 1: 正常应用运行 (0:00 – 0:08 | 8s)
+- **画面 (Visual)**: 浏览器全屏展示待测 SaaS 平台 (`cypress-realworld-app`)，展示用户仪表盘、侧边栏余额 `$1,475.00` 和交易列表正常渲染。
+- **旁白 (Voiceover - English)**:
+  > *"This is a live SaaS financial platform. Everything looks fine on the surface—until someone pushes a broken commit right before launch."*
+- **解说提示**: 快速滑动展示正常页面，不要停留。
 
 ---
 
-## Scene 3: Undeniable Failure Evidence & Trace Viewer (1:15 – 2:05)
-
-**[Screen Visual]**:  
-Open Playwright Trace Viewer showing `assets/evidence/synthetic-regression/failure-trace.zip`. Hover over timeline showing DOM snapshots and console logs.
-
-**[Narration Script]**:  
-> "Now, here's what happens when a real bug hits your code.
-> 
-> In this controlled drill, we simulated a common developer mistake: accidentally omitting the `firstName` field when updating profile settings. 
-> 
-> Our regression gate immediately caught the missing database persistence, failed with **Exit Code 1**, and automatically generated this forensic package:
-> 
-> - A visual screenshot of the exact failure state.
-> - A full session video.
-> - And this interactive Playwright Trace. Look at this: your developers can step forward and backward in time, inspect every DOM mutation, check network requests, and fix the bug in minutes without ever asking 'can you reproduce that?'"
+### 镜头 2: 人为注入回归故障 (0:08 – 0:18 | 10s)
+- **画面 (Visual)**: 切到 VS Code 编辑器，打开 `cypress-realworld-app/src/components/UserSettingsForm.tsx`，高亮并注释掉更新请求中的 `firstName: values.firstName`。保存文件。
+- **旁白 (Voiceover - English)**:
+  > *"Let's inject a classic developer mistake: silently omitting the first name field during account settings dispatch."*
+- **解说提示**: 鼠标动作干脆，保存文件时触发热重载。
 
 ---
 
-## Scene 4: Beyond Automation — Real Security & Architecture Findings (2:05 – 2:35)
-
-**[Screen Visual]**:  
-Switch to `docs/QA_FINDINGS.md` highlighting `DEF-SEC-01` and `DEF-01`.
-
-**[Narration Script]**:  
-> "When you hire me, you don't just get an automation script runner. You get a pre-launch QA partner.
-> 
-> During exploratory testing of this target app, I uncovered a critical **BOLA authorization vulnerability** in the API—`PATCH /users/:userId` had no ownership check, meaning any authenticated user could overwrite another user's profile. I also flagged that payment mutations weren't atomic, risking ledger desyncs.
-> 
-> Finding these before launch saves you from catastrophic public security disclosures."
+### 镜头 3: 自动化测试跑挂，展示失败证据 (0:18 – 0:28 | 10s)
+- **画面 (Visual)**: 切到终端执行 `npx playwright test`。测试执行到 `TC-PROF-01` 时红字爆出 `1 failed`，进程以 Exit Code 1 中断。紧接着切到 Playwright Trace Viewer，展示失败发生时的 DOM 抓拍、网络请求和错误堆栈。
+- **旁白 (Voiceover - English)**:
+  > *"We run the pre-launch gate. Boom—Exit Code 1. Playwright immediately catches the regression and captures undeniable forensic evidence: failure screenshot, session video, and DOM trace."*
+- **解说提示**: 放大展示红色的 `Exit Code 1` 与 Trace Viewer 里的红框断言。
 
 ---
 
-## Scene 5: The Offer & Next Steps (2:35 – 3:00)
+### 镜头 4: 快速修复代码 (0:28 – 0:38 | 10s)
+- **画面 (Visual)**: 切回 VS Code，快速取消注释 `firstName: values.firstName`，保存文件恢复正常代码。
+- **旁白 (Voiceover - English)**:
+  > *"With the exact line of failure pinpointed, the developer fixes the payload and commits the change in seconds."*
+- **解说提示**: 敲击一次 `Ctrl+Z` 或取消注释，保存，干净利索。
 
-**[Screen Visual]**:  
-Switch back to `marketplace/UPWORK.md` or portfolio pricing grid ($49 / $89 / $149).
+---
 
-**[Narration Script]**:  
-> "Whether you need a quick 2-day smoke gate for $49, or a full 5-flow regression suite with CI/CD integration and a security audit for $149, I can have this running on your app this week.
-> 
-> Drop me a message on Upwork or Fiverr with a link to your staging app or repository, and let's make sure your next launch is completely stress-free. Thanks for watching!"
+### 镜头 5: 重新运行自动化测试全部 PASS (0:38 – 0:48 | 10s)
+- **画面 (Visual)**: 切回终端重新执行 `npm test`。12 个测试顺序疾速执行，绿色对勾逐行飞刷。
+- **旁白 (Voiceover - English)**:
+  > *"We re-trigger the suite. Every critical flow—auth, payments, notifications, and settings—runs against a deterministic seeded state."*
+- **解说提示**: 终端字体清晰，绿色的进度条连续滚动。
+
+---
+
+### 镜头 6: 展示 12 个测试全部通过的结果 (0:48 – 0:55 | 7s)
+- **画面 (Visual)**: 终端打印 `12 passed (~38s)`。切出原生的 Playwright HTML Test Report，全绿卡片一览无余。
+- **旁白 (Voiceover - English)**:
+  > *"All 12 critical tests pass in 38 seconds. Zero flakiness. Your release gate is officially green."*
+- **解说提示**: 镜头稍作定格在 `12 passed` 与 HTML 报告页面。
+
+---
+
+### 镜头 7: 个人品牌与接单号召 (0:55 – 1:00 | 5s)
+- **画面 (Visual)**: 切到个人 Portfolio 首页或品牌尾页卡片：“ReleaseGuard Mini — Pre-Launch QA & Playwright Automation | Available on Upwork, Fiverr & Contra”。
+- **旁白 (Voiceover - English)**:
+  > *"I'm [Your Name]. Let's protect your launch day together. Find me on Upwork and Fiverr."*
+- **解说提示**: 露出头像/主页与平台链接，干脆利落结束。
+
+---
+
+## 🛠️ 录制准备 Checklist (录制前 1 分钟确认)
+1. 目标应用已启动并在 `http://localhost:3000` 正常访问。
+2. 运行一次 `corepack yarn test:seed` 确保初始测试数据干净。
+3. 终端窗口调至 125% 缩放，配色使用清晰的深色高对比主题。
+4. 预先开好 Trace Viewer 窗口与 HTML Report 窗口，避免现场录制加载等待。
