@@ -12,7 +12,7 @@
 ### 镜头 1: 正常应用运行 (0:00 – 0:08 | 8s)
 - **画面 (Visual)**: 浏览器全屏展示待测 SaaS 平台 (`cypress-realworld-app`)，展示用户仪表盘、侧边栏余额 `$1,475.00` 和交易列表正常渲染。
 - **旁白 (Voiceover - English)**:
-  > *"This is a live SaaS financial platform. Everything looks fine on the surface—until someone pushes a broken commit right before launch."*
+  > *"This is an open-source full-stack payment application used as a realistic QA target. Everything looks fine on the surface—until someone pushes a broken commit right before launch."*
 - **解说提示**: 快速滑动展示正常页面，不要停留。
 
 ---
@@ -52,7 +52,7 @@
 ### 镜头 6: 展示 12 个测试全部通过的结果 (0:48 – 0:55 | 7s)
 - **画面 (Visual)**: 终端打印 `12 passed (~38s)`。切出原生的 Playwright HTML Test Report，全绿卡片一览无余。
 - **旁白 (Voiceover - English)**:
-  > *"All 12 critical tests pass in 38 seconds. Zero flakiness. Your release gate is officially green."*
+  > *"All 12 critical tests pass in 38 seconds. Across four controlled full-suite runs, all 48 observed test executions passed without a flaky failure. Your release gate is officially green."*
 - **解说提示**: 镜头稍作定格在 `12 passed` 与 HTML 报告页面。
 
 ---

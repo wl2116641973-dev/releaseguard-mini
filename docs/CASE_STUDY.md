@@ -82,7 +82,7 @@ To prove that the suite does not yield false positives, we conducted an intentio
 
 | Metric | Result | Commercial Relevance |
 |---|---|---|
-| **Suite Reliability** | **48/48 test passes across 4 consecutive runs** | Deterministic baseline; zero observed flakiness under seed conditions |
+| **Suite Reliability** | **48/48 test passes across 4 consecutive runs** | Deterministic baseline; no flaky failures observed under seed conditions |
 | **Execution Speed** | **12 tests in ~38 seconds** | Fast feedback in CI/CD without slowing developers |
 | **Dependencies** | **Playwright + TypeScript only** | Zero Docker, zero Allure, zero bloated baggage |
 | **Findings Documented** | **2 Observed Functional + 3 Code Review Risks + 1 Testability Note** | Clear, actionable triage for product engineering |

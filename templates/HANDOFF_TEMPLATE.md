@@ -11,7 +11,7 @@
 - **Total Test Runs Executed**: [N]
 - **Consecutive Stable Runs**: 3 / 3 PASS
 - **Average Suite Runtime**: [X] seconds
-- **Flakiness Rate**: 0% (Zero artificial retries required locally)
+- **Observed Stability**: All tests passed across consecutive verification runs without flaky retries
 
 ## 3. How to Run the Automated Suite
 \\\ash

@@ -37,6 +37,6 @@
 
 ## 5. Exit Criteria & Definition of Done
 1. All critical flows automated with web-first assertions.
-2. 3 consecutive automated test runs pass with 0 flakiness.
+2. 3 consecutive automated test runs pass without flaky failures.
 3. All discovered defects documented with reproduction steps and evidence.
 4. Clean CI execution pipeline verified.

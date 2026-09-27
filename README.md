@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Tests: 12/12 Passing](https://img.shields.io/badge/Tests-12%2F12%20Pass%20(38s)-brightgreen)](docs/SCOPE_AND_TEST_PLAN.md)
-[![Observed Flakiness: 0%](https://img.shields.io/badge/Observed%20Flaky-0%25%20(48%2F48%20passes)-success)](GPT_REVIEW_LOG.md)
+[![Stability: 48/48 Observed Passes](https://img.shields.io/badge/Stability-48%2F48%20Observed%20Passes-success)](GPT_REVIEW_LOG.md)
 
 > **"Will this release break our core product and lose customer trust on Day 1?"**  
 > ReleaseGuard Mini turns release uncertainty into a **deterministic 38-second pre-launch regression gate** that catches breaking bugs before your users do.
@@ -18,9 +18,9 @@ If you are a **SaaS Founder**, **Solo Developer**, or **Product Lead** hiring on
 
 1. **Quickly Understand Your Web App**: Jump into an unfamiliar full-stack codebase and identify the revenue-critical failure modes.
 2. **Design High-Impact QA Scope**: Prioritize the flows that matter (Auth, Payments, Notifications, Settings) rather than superficial click-around testing.
-3. **Build Deterministic Playwright Tests**: 12 critical-flow tests running in **~38 seconds with 0 observed flaky failures** across 4 consecutive full runs (48/48 observed passes under deterministic seed isolation).
+3. **Build Deterministic Playwright Tests**: 12 critical-flow tests running in **~38 seconds** with **48/48 observed passes across four consecutive controlled runs** under deterministic seed isolation.
 4. **Deliver Undeniable Forensic Proof**: Automatic screenshots, videos, and millisecond Playwright trace archives whenever a test fails.
-5. **Surface Real Architectural & Authorization Flaws**: Find high-risk business vulnerabilities (e.g. cross-user authorization boundaries, non-atomic financial writes) before going to production.
+5. **Surface Functional Issues & Code-Review Risks**: Identify functional defects and code-review risks (e.g. cross-user authorization boundary risks, non-atomic financial writes) before going to production.
 
 ---
 
@@ -120,7 +120,7 @@ releaseguard-mini/
 │   └── screenshots/          # Baseline execution proofs
 ├── docs/
 │   ├── SCOPE_AND_TEST_PLAN.md# Risk-weighted testing scope & mapping
-│   ├── QA_FINDINGS.md        # Real exploratory defect findings (BOLA, etc.)
+│   ├── QA_FINDINGS.md        # Real exploratory defect findings & code-review risks
 │   ├── SYNTHETIC_REGRESSION.md# Controlled regression drill forensics
 │   ├── CLIENT_HANDOFF.md     # Executive GO/HOLD delivery package
 │   └── CASE_STUDY.md         # Full client-facing portfolio case study

@@ -4,7 +4,7 @@
 - **Target Application**: Cypress Real-World App (RWA) — Modern Fullstack Payment & Social Transfer SaaS
 - **Target Architecture**: React (Vite 8), Express.js, TypeScript, lowdb/SQLite backend, JWT/Cookie auth
 - **Target URL**: `http://localhost:3000` (API: `http://localhost:3001`)
-- **QA Objective**: Validate 4 mission-critical commercial user flows before public launch, detect regressions, and establish an automated Playwright suite with zero flakiness.
+- **QA Objective**: Validate 4 mission-critical commercial user flows before public launch, detect regressions, and establish an automated Playwright suite with high deterministic stability.
 
 ---
 
@@ -62,6 +62,6 @@
 
 ## 5. Exit Criteria & Definition of Done
 1. **Suite Stability**: 8–12 automated tests covering all 4 critical flows.
-2. **Deterministic Quality**: 3 consecutive full-suite runs pass with 0 retries and 0 flakiness.
+2. **Deterministic Quality**: 3 consecutive full-suite runs pass with all tests passing without retries.
 3. **Evidence Artifacts**: Automatic traces and screenshots captured on failure; native HTML report generated.
 4. **CI Readiness**: GitHub Actions workflow prepared and locally verified.
